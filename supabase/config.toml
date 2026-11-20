@@ -1,0 +1,7 @@
+project_id = "quotiapp"
+
+[auth]
+enable_signup = false
+
+[functions.decolecta]
+verify_jwt = true
