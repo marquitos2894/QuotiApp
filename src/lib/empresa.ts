@@ -59,6 +59,12 @@ export async function uploadLogo(file: File): Promise<string> {
   return path
 }
 
+export async function removeLogo(path: string): Promise<void> {
+  await updateEmpresa({ logo_path: null })
+  // Si el borrado falla, el archivo queda huérfano pero el logo ya no se usa.
+  await supabase.storage.from(LOGOS).remove([path])
+}
+
 export async function getLogoUrl(path: string): Promise<string> {
   const { data, error } = await supabase.storage
     .from(LOGOS)

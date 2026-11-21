@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import {
   getEmpresa,
   getLogoUrl,
+  removeLogo,
   updateEmpresa,
   uploadLogo,
 } from "@/lib/empresa"
@@ -52,6 +53,7 @@ export default function Configuracion() {
   } | null>(null)
   const [guardando, setGuardando] = useState(false)
   const [subiendo, setSubiendo] = useState(false)
+  const [quitando, setQuitando] = useState(false)
   const pathLogo = empresa?.logo_path
 
   useEffect(() => {
@@ -123,9 +125,25 @@ export default function Configuracion() {
     }
   }
 
+  async function quitarLogo() {
+    if (!pathLogo) return
+    setQuitando(true)
+    try {
+      await removeLogo(pathLogo)
+      setEmpresa((actual) => actual && { ...actual, logo_path: null })
+      toast.success("Logo quitado.")
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "No se pudo quitar el logo."
+      )
+    } finally {
+      setQuitando(false)
+    }
+  }
+
   async function guardar(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!empresa || guardando || subiendo) return
+    if (!empresa || guardando || subiendo || quitando) return
     if (!empresa.razon_social.trim()) {
       toast.error("Escribe la razón social.")
       return
@@ -191,7 +209,7 @@ export default function Configuracion() {
       ) : (
         <form onSubmit={guardar} className="min-w-0">
           <fieldset
-            disabled={guardando || subiendo}
+            disabled={guardando || subiendo || quitando}
             className="grid min-w-0 gap-4"
           >
             <Card>
@@ -238,6 +256,17 @@ export default function Configuracion() {
                     alt="Logo de la empresa"
                     className="h-20 w-40 rounded-lg border object-contain p-2"
                   />
+                )}
+                {pathLogo && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="justify-self-start"
+                    onClick={() => void quitarLogo()}
+                  >
+                    <Trash2 />
+                    {quitando ? "Quitando…" : "Quitar logo"}
+                  </Button>
                 )}
                 <div className="grid min-w-0 gap-2">
                   <Label htmlFor="logo-empresa">
