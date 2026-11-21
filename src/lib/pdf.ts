@@ -1,6 +1,10 @@
 ﻿import { getLogoDataUrl } from "@/lib/empresa"
 import { calcularTotales, formatMoney } from "@/lib/money"
-import { fechaVisible, fechaVencimiento } from "@/lib/cotizacion-vista"
+import {
+  fechaVisible,
+  fechaVencimiento,
+  tipoVisible,
+} from "@/lib/cotizacion-vista"
 import type { CotizacionConDetalle, Empresa } from "@/lib/types"
 
 export function nombrePdf(cot: CotizacionConDetalle) {
@@ -117,8 +121,8 @@ export async function generarPdf(
     head: [encabezado],
     body: cot.items.map((item, i) => [
       String(i + 1),
-      item.descripcion,
-      item.unidad,
+      item.descripcion.toUpperCase(),
+      tipoVisible(item.unidad),
       String(item.cantidad),
       money(item.precio_unitario),
       ...(descuento ? [String(item.descuento_pct)] : []),

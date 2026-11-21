@@ -2,17 +2,24 @@ import { ArrowDown, ArrowUp, Copy, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import {
   convertirItem,
   crearItem,
   type ItemBorrador,
 } from "@/lib/cotizacion-borrador"
+import { tipos } from "@/lib/cotizacion-vista"
 import { calcularLinea, formatMoney } from "@/lib/money"
 import type { Moneda } from "@/lib/types"
 
 const campos = [
-  { clave: "unidad", etiqueta: "Unidad" },
   { clave: "cantidad", etiqueta: "Cantidad" },
   { clave: "precio_unitario", etiqueta: "Precio unit." },
   { clave: "descuento_pct", etiqueta: "Desc. %" },
@@ -74,13 +81,39 @@ export function ItemsEditor({
               <Textarea
                 id={`${baseId}-descripcion`}
                 rows={2}
-                className="min-h-16 min-w-0 resize-none"
-                placeholder="Describe el servicio"
+                className="min-h-16 min-w-0 resize-none uppercase placeholder:normal-case"
+                placeholder="Describe el producto o servicio"
                 value={item.descripcion}
                 onChange={(event) =>
                   actualizar(indice, { descripcion: event.target.value })
                 }
               />
+            </div>
+            <div className="grid min-w-0 gap-2">
+              <Label htmlFor={`${baseId}-unidad`} className="md:text-xs">
+                Unidad
+              </Label>
+              <Select
+                value={item.unidad}
+                onValueChange={(unidad) => actualizar(indice, { unidad })}
+              >
+                <SelectTrigger
+                  id={`${baseId}-unidad`}
+                  className="h-11 w-full min-w-0 md:h-9 md:px-2"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {tipos.map(({ valor, etiqueta }) => (
+                    <SelectItem key={valor} value={valor}>
+                      {etiqueta}
+                    </SelectItem>
+                  ))}
+                  {tipos.every(({ valor }) => valor !== item.unidad) && (
+                    <SelectItem value={item.unidad}>{item.unidad}</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
             {campos.map(({ clave, etiqueta }) => {
               const id = `${baseId}-${clave}`
@@ -92,7 +125,7 @@ export function ItemsEditor({
                   <Input
                     id={id}
                     className="h-11 min-w-0 md:h-9 md:px-2"
-                    inputMode={clave === "unidad" ? undefined : "decimal"}
+                    inputMode="decimal"
                     value={item[clave]}
                     onChange={(event) =>
                       actualizar(indice, { [clave]: event.target.value })

@@ -16,7 +16,7 @@ export function crearItem(
     idLocal: ++ultimoIdLocal,
     orden,
     descripcion: item?.descripcion ?? "",
-    unidad: item?.unidad ?? "servicio",
+    unidad: item?.unidad === "bienes" ? "unidad" : (item?.unidad ?? "servicio"),
     cantidad: String(item?.cantidad ?? 1),
     precio_unitario: String(item?.precio_unitario ?? 0),
     descuento_pct: String(item?.descuento_pct ?? 0),

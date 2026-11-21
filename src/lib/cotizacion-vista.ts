@@ -10,6 +10,28 @@ export const fechaVisible = (fecha: string) => {
   const [a, m, d] = fecha.split("-")
   return `${d}/${m}/${a}`
 }
+// Servicio y Unidad van primero; el resto son unidades de medida.
+export const tipos = [
+  { valor: "servicio", etiqueta: "Servicio" },
+  { valor: "unidad", etiqueta: "Unidad" },
+  { valor: "kg", etiqueta: "Kg" },
+  { valor: "caja", etiqueta: "Caja" },
+  { valor: "paquete", etiqueta: "Paquete" },
+  { valor: "gln", etiqueta: "Gln" },
+  { valor: "litro", etiqueta: "Litro" },
+  { valor: "metro", etiqueta: "Metro" },
+  { valor: "m2", etiqueta: "M2" },
+  { valor: "juego", etiqueta: "Juego" },
+  { valor: "par", etiqueta: "Par" },
+  { valor: "rollo", etiqueta: "Rollo" },
+  { valor: "bolsa", etiqueta: "Bolsa" },
+  { valor: "balde", etiqueta: "Balde" },
+  { valor: "docena", etiqueta: "Docena" },
+]
+export const tipoVisible = (tipo: string) =>
+  // "bienes" es el valor anterior de "unidad" en cotizaciones ya guardadas.
+  tipos.find((t) => t.valor === (tipo === "bienes" ? "unidad" : tipo))
+    ?.etiqueta ?? tipo.charAt(0).toUpperCase() + tipo.slice(1)
 export function fechaVencimiento(fecha: string, dias: number) {
   const f = new Date(`${fecha}T00:00:00Z`)
   f.setUTCDate(f.getUTCDate() + dias)

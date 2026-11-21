@@ -49,6 +49,7 @@ import {
   estados,
   fechaVisible,
   fechaVencimiento,
+  tipoVisible,
 } from "@/lib/cotizacion-vista"
 import { generarPdf, nombrePdf } from "@/lib/pdf"
 import {
@@ -351,10 +352,10 @@ export default function CotizacionDetalle({ id }: { id: string }) {
                   {c.items.map((i, n) => (
                     <tr key={i.id || n} className="even:bg-muted/40">
                       <td className="p-3 align-top">{n + 1}</td>
-                      <td className="min-w-52 p-3 align-top break-words whitespace-pre-wrap">
+                      <td className="min-w-52 p-3 align-top break-words whitespace-pre-wrap uppercase">
                         {i.descripcion}
                       </td>
-                      <td className="p-3 align-top">{i.unidad}</td>
+                      <td className="p-3 align-top">{tipoVisible(i.unidad)}</td>
                       <td className="p-3 align-top tabular-nums">
                         {i.cantidad}
                       </td>
